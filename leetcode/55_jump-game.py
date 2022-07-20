@@ -1,3 +1,23 @@
+# good dp solution
+# dp[i]: i번째에서 가장 멀리갈 수 있는 index 번호
+class Solution2(object):
+    def canJump(self, nums):
+        dp = [0] * len(nums)
+        dp[0] = nums[0]
+        
+        for i in range(1, len(nums)-1):
+            if dp[i-1] < i:
+                return False
+            
+            dp[i] = max(dp[i-1], i+nums[i])
+            
+            if dp[i-2] >= len(nums)-1:
+                return True
+        
+        return dp[len(nums)-2] >= len(nums)-1
+
+# 첫 제출 (bad time complexity)
+# 완전탐색
 class Solution(object):
     def canJump(self, nums):
         """
