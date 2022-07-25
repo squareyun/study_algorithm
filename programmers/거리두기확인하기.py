@@ -12,15 +12,16 @@ def solution(places):
         for a in itertools.combinations(index, 2):
             if exitFlag: break
             
-            if abs(a[0][0]-a[1][0]) + abs(a[0][1]-a[1][1]) > 2:
+            distance = abs(a[0][0]-a[1][0]) + abs(a[0][1]-a[1][1])
+            if distance > 2:
                 continue
+            if distance == 1:
+                answer.append(0)
+                exitFlag = True
+                break
             check = []
-            if a[0][0] == a[1][0]:
-                for i in range(min(a[0][1],a[1][1]), max(a[0][1],a[1][1])):
-                    check.append((a[0][0], i))
-            elif a[0][1] == a[1][1]:
-                for i in range(min(a[0][0],a[1][0]), max(a[0][0],a[1][0])):
-                    check.append((i, a[0][1]))
+            if a[0][0] == a[1][0] or a[0][1] == a[1][1]:
+                check.append(((a[0][0]+a[1][0])//2, (a[0][1]+a[1][1])//2))
             else:
                 if a[0][1] > a[1][1]:
                     check.append((min(a[0][0],a[1][0]),min(a[0][1],a[1][1])))
@@ -39,3 +40,5 @@ def solution(places):
             answer.append(1)
     
     return answer
+
+print(solution([["POOOO", "OOOOO","POOOO","OOOOO","OOOOO"]]))
