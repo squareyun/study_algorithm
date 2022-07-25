@@ -30,7 +30,6 @@ def solution(places):
                     check.append((max(a[0][0],a[1][0]),min(a[0][1],a[1][1])))
                     check.append((min(a[0][0],a[1][0]),max(a[0][1],a[1][1])))
 
-            print(a, check)
             for c in check:
                 if place[c[0]][c[1]] == 'O':
                     answer.append(0)
@@ -40,5 +39,3 @@ def solution(places):
             answer.append(1)
     
     return answer
-
-print(solution([["POOOO", "OOOOO","POOOO","OOOOO","OOOOO"]]))
