@@ -1,89 +1,95 @@
 # 낚시왕 (https://www.acmicpc.net/problem/17143)
+import sys
 R,C,m=map(int,input().split())
-shark=[list(map(int,input().split())) for _ in range(m)]
+shark=[[[] for _ in range(C+1)] for _ in range(R+1)]
+for _ in range(m):
+    r,c,s,d,z=map(int,sys.stdin.readline().split())
+    shark[r][c]=[s,d,z]
 dx=[0,-1,1,0,0] #위,아래,오른쪽,왼쪽
 dy=[0,0,0,1,-1]
 answer=0
 
+def change(d):
+    if d == 1: return 2
+    elif d == 2: return 1
+    elif d == 3: return 4
+    elif d == 4: return 3
+
 def catch(col):
     global answer
-    rmList=[]
-    for i in shark:
-        if i[1] == col:
-            rmList.append(i)
-    if len(rmList) == 0: return
-    sorted(rmList,key=lambda x: x[0])
-    target = rmList[0][4]
-    answer += target
-    for i in range(len(shark)):
-        if shark[i][4] == target:
-            shark.pop(i)
+    for i in range(1,R+1):
+        if shark[i][col]:
+            answer += shark[i][col][2]
+            shark[i][col] = []
             return
 
 def move():
-    for i, a in enumerate(shark): #위치 업데이트
-        r,c,s,d,z=a[0],a[1],a[2],a[3],a[4]
-        nx=r+s*dx[d]
-        ny=c+s*dy[d]
+    global shark
+    tshark=[[[] for _ in range(C+1)] for _ in range(R+1)]
+    for r in range(1,R+1):
+        for c in range(1,C+1):
+            if not shark[r][c]: continue
+            sh=shark[r][c]
+            s,d,z=sh[0],sh[1],sh[2]
+            nx=r+s*dx[d]
+            ny=c+s*dy[d]
+            if nx < 1 or ny < 1 or nx > R or ny > C:
+                if d == 1:
+                    t = s - (r-1)
+                    dir,move=divmod(t,(R-1))
+                    if r != 1: d = change(d)
+                    if dir % 2 == 0:
+                        nx=1+move
+                        if dir != 0 :
+                            d = change(d)
+                    else:
+                        nx=R-move
+                        if move != 0:
+                            d = change(d)
+                elif d == 2:
+                    t = s - (R-r)
+                    dir,move=divmod(t,(R-1))
+                    if r != R: d = change(d)
+                    if dir % 2 == 0:
+                        nx=R-move
+                        if dir != 0 :
+                            d = change(d)
+                    else:
+                        nx=1+move
+                        if move != 0:
+                            d = change(d)
+                elif d == 3:
+                    t = s - (C-c)
+                    dir,move=divmod(t,(C-1))
+                    if c != C: d = change(d)
+                    if dir % 2 == 0:
+                        ny=C-move
+                        if dir != 0 :
+                            d = change(d)
+                    else:
+                        ny=1+move
+                        if move != 0:
+                            d = change(d)
+                elif d == 4:
+                    t = s - (c-1)
+                    dir,move=divmod(t,(C-1))
+                    if c != 1: d = change(d)
+                    if dir % 2 == 0:
+                        ny=1+move
+                        if dir != 0 :
+                            d = change(d)
+                    else:
+                        ny=C-move
+                        if move != 0:
+                            d = change(d)
 
-        if d == 1:
-            t = s - (r-1)
-            dir,move=divmod(t,(R-1))
-            if dir % 2 == 0:
-                nx=1+move
-                shark[i][3] = 2 if R-1 != 1 else 1
-            else:
-                nx=R-move
-                shark[i][3] = 2 if R-1 == 1 else 1
-        elif d == 2:
-            t = s - (R-r)
-            dir,move=divmod(t,(R-1))
-            if dir % 2 == 0:
-                nx=R-move
-                shark[i][3] = 1 if R-1 != 1 else 2
-            else:
-                nx=1+move
-                shark[i][3] = 1 if R-1 == 1 else 2
-        elif d == 3:
-            t = s - (C-c)
-            dir,move=divmod(t,(C-1))
-            if dir % 2 == 0:
-                ny=C-move
-                shark[i][3] = 4 if C-1 != 1 else 3
-            else:
-                ny=1+move
-                shark[i][3] = 4 if C-1 == 1 else 3
-        elif d == 4:
-            t = s - (c-1)
-            dir,move=divmod(t,(C-1))
-            if dir % 2 == 0:
-                ny=1+move
-                shark[i][3] = 3 if C-1 != 1 else 4
-            else:
-                ny=C-move
-                shark[i][3] = 3 if C-1 == 1 else 4
-        shark[i][0],shark[i][1]=nx,ny
+            if not tshark[nx][ny] or (z > tshark[nx][ny][2]):
+                tshark[nx][ny] = [s,d,z]
+    shark=tshark
 
-    remove_list=[]
-    for target in shark: #중복 상어 제거
-        targetR,targetC=target[0],target[1]
-        temp_remove_list=[target[4]] #상어의 크기를 저장할 리스트
-        for temp in shark:
-            if temp[4]==target[4]: continue
-            tempR,tempC=temp[0],temp[1]
-            if targetR==tempR and targetC==tempC: #위치가 같다면 크기값 넣기
-                temp_remove_list.append(temp[4])
-        if len(temp_remove_list) > 1:
-            sorted(temp_remove_list)
-            remove_list.extend(temp_remove_list[:-1]) #정렬 후 가장 큰값 빼고 넣기
-    for i in remove_list:
-        for j in range(len(shark)):
-            if shark[j][4] == i:
-                shark.pop(j)
-                break
-    
 for col in range(1,C+1): #열 개수만큼 반복
     catch(col)
+    if col == C: break
     move()
 
 print(answer)
