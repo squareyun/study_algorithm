@@ -1,3 +1,8 @@
+# TITLE: 구슬 탈출 (https://school.programmers.co.kr/learn/courses/30/lessons/60057)
+# TAG: implementation, bruteforce
+# DATE: 20220809
+# AUTHOR: squareyun
+
 def solution(s):
     answer = [len(s)]
 
@@ -24,3 +29,28 @@ def solution(s):
         answer.append(len(cutstr))
 
     return min(answer)
+
+def solution2(s):
+    answer = len(s)
+    for cut in range(1, len(s) // 2 + 1):
+        ts = ""
+        idx = 0
+        while idx < len(s):
+            target = s[idx:idx+cut]
+            spli = s[idx:].split(target)
+            num = 0
+            if spli[-1] == "": spli = spli[:-1]
+            for i in spli:
+                if i == "":
+                    num += 1
+                else:
+                    break
+            if num > 1:
+                ts += str(num) + target
+            else:
+                ts += target
+            idx += num * cut
+        if idx < len(s):
+            ts += s[idx:]
+        answer = min(answer, len(ts))
+    return answer
