@@ -1,4 +1,5 @@
-# TITLE: [1차] 캐시 (https://school.programmers.co.kr/learn/courses/30/lessons/17680#)
+# TITLE: 캐시 (https://school.programmers.co.kr/learn/courses/30/lessons/17680#)
+# LEVEL: 2
 # TAG: kakao, lru
 # DATE: 20220901
 # AUTHOR: squareyun
