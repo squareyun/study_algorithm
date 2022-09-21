@@ -1,3 +1,9 @@
+#TITLE: 볼록 껍질 (https://www.acmicpc.net/problem/1708)
+#LEVEL: P5
+#TAG: convex_hull, geometry
+#DATE: 20220921
+#AUTHOR: squareyun
+
 import math
 
 def ccw(i, j, k):
