@@ -1,7 +1,7 @@
 #TITLE: 전깃줄 (https://www.acmicpc.net/problem/2565)
 #LEVEL: G5
 #TAG: dp, lis
-#DATE: 20221006
+#DATE: 20221007
 #AUTHOR: squareyun
 
 n=int(input())
